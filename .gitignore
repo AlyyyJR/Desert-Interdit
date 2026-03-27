@@ -1,0 +1,11 @@
+# Fichiers compiles
+out/
+
+# Fichiers systeme
+.DS_Store
+*.class
+
+# IDE
+.idea/
+*.iml
+.vscode/
