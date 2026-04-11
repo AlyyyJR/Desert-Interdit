@@ -203,8 +203,6 @@ Ca nous donne plusieurs avantages :
 3. **Coherence** : toutes les vues sont toujours synchronisees avec l'etat du modele
 4. **Reutilisabilite** : le modele peut etre reutilise dans un autre contexte (console, reseau)
 
-Note : depuis Java 9, `Observable` et `Observer` sont deprecated. Java recommande `PropertyChangeListener` mais on utilise Observable/Observer parce que c'est le pattern vu en cours et il fait le job pour notre projet.
-
 ### Exemple : quand on creuse du sable
 
 ```
@@ -269,16 +267,16 @@ Controleur.actionPerformed()
 ```
 Desert-Interdit/
 |-- src/
-|   |-- Main.java                       # Point d'entree
+|   |-- Main.java                      # Point d'entree
 |   |-- modele/
-|   |   |-- Desert.java                 # Modele principal (grille 5x5, extends Observable)
-|   |   |-- Zone.java                   # Case du plateau (position, sable, type, occupants)
-|   |   |-- Joueur.java                 # Joueur (nom, eau, equipements, role)
-|   |   |-- TypeZone.java               # Enum des 16 types de zones
-|   |   |-- CarteTempete.java           # Cartes tempete (vent, chaleur, dechaine)
+|   |   |-- Desert.java                # Modele principal (grille 5x5, extends Observable)
+|   |   |-- Zone.java                  # Case du plateau (position, sable, type, occupants)
+|   |   |-- Joueur.java                # Joueur (nom, eau, equipements, role)
+|   |   |-- TypeZone.java              # Enum des 16 types de zones
+|   |   |-- CarteTempete.java          # Cartes tempete (vent, chaleur, dechaine)
 |   |   |-- Equipement.java            # Equipements (jetpack, blaster, etc.)
-|   |   |-- Piece.java                  # Pieces de la machine volante (4 types)
-|   |   |-- Role.java                   # Enum des 6 roles
+|   |   |-- Piece.java                 # Pieces de la machine volante (4 types)
+|   |   |-- Role.java                  # Enum des 6 roles
 |   |
 |   |-- vue/
 |   |   |-- Fenetre.java               # Fenetre principale (JFrame + CardLayout)
@@ -294,26 +292,26 @@ Desert-Interdit/
 |   |   |-- Controleur.java            # Controleur (ActionListener + PlateauListener)
 |   |
 |   |-- resources/
-|       |-- images/                     # 34 images PNG
+|       |-- images/                    # 34 images PNG
 |
 |-- test/
 |   |-- modele/
-|       |-- JoueurTest.java             # 23 tests
-|       |-- ZoneTest.java               # 22 tests
-|       |-- DesertTest.java             # 25 tests
-|       |-- EquipementTest.java         # 13 tests
-|       |-- PieceTest.java              # 12 tests
-|       |-- CarteTempeteTest.java       # 13 tests
-|       |-- TypeZoneTest.java           # 16 tests
-|       |-- RoleTest.java               # 14 tests
+|       |-- JoueurTest.java            # 23 tests
+|       |-- ZoneTest.java              # 22 tests
+|       |-- DesertTest.java            # 25 tests
+|       |-- EquipementTest.java        # 13 tests
+|       |-- PieceTest.java             # 12 tests
+|       |-- CarteTempeteTest.java      # 13 tests
+|       |-- TypeZoneTest.java          # 16 tests
+|       |-- RoleTest.java              # 14 tests
 |
 |-- lib/
 |   |-- junit-4.13.2.jar
 |   |-- hamcrest-core-1.3.jar
 |
-|-- out/                                # Fichiers compiles
-|-- diagramme_classes.pdf               # Diagramme de classes UML
-|-- diagramme_classes.puml              # Source PlantUML du diagramme
+|-- out/                               # Fichiers compiles
+|-- diagramme_classes.pdf              # Diagramme de classes UML
+|-- diagramme_classes.puml             # Source PlantUML du diagramme
 |-- README.md
 ```
 
@@ -325,40 +323,66 @@ On a 3 ecrans geres par un `CardLayout` dans la fenetre principale :
 
 ```
 +------------------------------------------------------------------------+
-|                           VueMenu (CardLayout "MENU")                  |
+|                        Le Desert Interdit                              |
+|                    Configuration de la partie                          |
+|------------------------------------------------------------------------|
 |                                                                        |
-|   Nombre de joueurs : [ 2-5 ]                                          |
-|   Joueur 1 : [ Nom _________ ]  [ Role v ]                             |
-|   Joueur 2 : [ Nom _________ ]  [ Role v ]                             |
-|   ...                                                                  |
+|   Nombre de joueurs : [ 2 ]                                            |
+|                                                                        |
+|   Joueur 1 : [ Nom _________ ]                                         |
+|   Joueur 2 : [ Nom _________ ]                                         |
+|                                                                        |
+|   Roles :                                                              |
+|     - Role J1 : [ Aleatoire v ]                                        |
+|     - Role J2 : [ Aleatoire v ]                                        |
+|                                                                        |
 |   Difficulte : [ Normal v ]                                            |
-|                                [ JOUER ]                               |
+|                                                                        |
+|        [ Regles du jeu ]   [ Jouer ]   [ Demo ]                        |
+|                             [ Quitter ]                                |
 +------------------------------------------------------------------------+
                                     | clic JOUER
                                     v
 +----------------------------------------------------+--------------------+
-|                                                    |  VueActions        |
-|                                                    |                    |
-|                  VuePlateau                        |  [ Deplacer    ]   |
-|                                                    |  [ Creuser     ]   |
-|  +------+------+------+------+------+              |  [ Explorer    ]   |
-|  |      |      |      |      |      |              |  [ Ramasser    ]   |
-|  +------+------+------+------+------+              |  [ Donner eau  ]   |
-|  |      |      |      |      |      |              |  [ Prendre eau ]   |
-|  +------+------+------+------+------+              |  [ Equipement  ]   |
-|  |      |      |[OEIL]|      |      |              |  [ Fin tour    ]   |
-|  +------+------+------+------+------+              |                    |
-|  |      |      |      |      |      |              |  Actions : 4/4     |
-|  +------+------+------+------+------+              |  Joueur : Alice    |
-|  |      |      |      |      |      |              |  Tempete : 2.0     |
-|  +------+------+------+------+------+              +--------------------+
-|                                                    |  VuePieces         |
-|                                                    |                    |
-+----------------------------------------------------+  [ ] Moteur        |
-|                  VueJoueurs                        |  [ ] Helice        |
-|                                                    |  [ ] Gouvernail    |
-|  Alice: eau 5/5 | Bob: eau 5/5 | Carol: eau 5/5   |  [ ] Capteur        |
+|                                                    |      Actions       |
+|                                                    |--------------------|
+|                  VuePlateau                        | Joueur : Joueur 1  |
+|                                                    | Role : Porteuse    |
+|  +------+------+------+------+------+              | Actions : 4        |
+|  |      |      |      |      |      |              | Tempete : 2.0      |
+|  +------+------+------+------+------+              | Sable total : 8    |
+|  |      |      |      |      |      |              |--------------------|
+|  +------+------+------+------+------+              | [ Deplacer ]       |
+|  |      |      |[OEIL]|      |      |              | [ Creuser  ]       |
+|  +------+------+------+------+------+              | [ Explorer ]       |
+|  |      |      |      |      |      |              | [ Ramasser ]       |
+|  +------+------+------+------+------+              | [ Donner eau ]     |
+|  |      |      |      |      |      |              | [ Prendre eau ]    |
+|  +------+------+------+------+------+              | [ Utiliser eq ]    |
+|                                                    |--------------------|
+|                                                    | [ Fin de tour ]    |
+|                                                    | [ Retour menu ]    |
+|                                                    | [ Quitter ]        |
 +----------------------------------------------------+--------------------+
+|                      Joueurs                       |   Pieces machine   |
+|----------------------------------------------------+--------------------|
+| Joueur 1 : Eau 5/5 | Equip : 0 | Role              | [ ] Moteur         |
+| Joueur 2 : Eau 5/5 | Equip : 0 | Role              | [ ] Helice         |
+|                                                    | [ ] Gouvernail     |
+|                                                    | [ ] Capteur        |
++----------------------------------------------------+--------------------+
+                      | Fin de game
+                      v
++----------------------------------------+
+|            Fin de partie               |
+|----------------------------------------|
+|                                        |
+|           VICTOIRE / DEFAITE           |
+|                                        |
+|       Message explicatif (raison)      |
+|                                        |
+|             [ Retour menu ]            |
++----------------------------------------+
 ```
 
 | Ecran   | Panneau           | Affiche                                      |
@@ -481,5 +505,5 @@ java -cp out:lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar org.junit.runner.JUn
 
 ## Auteurs
 
-**Aly KONATE** & **Youssef ABOU HASHISH**
-Projet POGL — L2 Informatique, Universite Paris-Saclay
+> **Aly KONATE** & **Youssef ABOU HASHISH**
+> Projet POGL — L2 Informatique, Universite Paris-Saclay
