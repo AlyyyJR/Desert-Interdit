@@ -327,16 +327,16 @@ On a 3 ecrans geres par un `CardLayout` dans la fenetre principale :
 |                    Configuration de la partie                          |
 |------------------------------------------------------------------------|
 |                                                                        |
-|                 Nombre de joueurs : [ 2 ]                              |
+|                       Nombre de joueurs : [ 2 ]                        |
 |                                                                        |
-|                 Joueur 1 : [ Nom _________ ]                           |
-|                 Joueur 2 : [ Nom _________ ]                           |
+|                 Joueur 1 :            [ Nom _________ ]                |
+|                 Joueur 2 :            [ Nom _________ ]                |
 |                                                                        |
-|                 Roles :                                                |
-|                 - Role J1 : [ Aleatoire v ]                            |
-|                 - Role J2 : [ Aleatoire v ]                            |
+|                             Roles :                                    |
+|                 - Role J1 :         [ Aleatoire v ]                    |
+|                 - Role J2 :         [ Aleatoire v ]                    |
 |                                                                        |
-|                 Difficulte : [ Normal v ]                              |
+|                 Difficulte :         [ Normal v ]                      |
 |                                                                        |
 |                 [ Regles du jeu ]   [ Jouer ]   [ Demo ]               |
 |                             [ Quitter ]                                |
