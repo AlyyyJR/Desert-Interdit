@@ -23,7 +23,7 @@ On doit cooperer pour retrouver les **4 pieces de la machine volante** (Moteur, 
 Le desert est une **grille 5x5**. Au centre il y a l'oeil de la tempete qui se deplace quand on pioche des cartes vent. Le sable s'accumule sur les zones au fil des tours.
 
 ```
-         Col 0     Col 1     Col 2     Col 3     Col 4
+          Col 0     Col 1     Col 2     Col 3     Col 4
 Ligne 0  [Zone]    [Zone]    [Zone]    [Zone]    [Zone]
 Ligne 1  [Zone]    [Zone]    [Zone]    [Zone]    [Zone]
 Ligne 2  [Zone]    [Zone]    [OEIL]    [Zone]    [Zone]
@@ -346,19 +346,19 @@ On a 3 ecrans geres par un `CardLayout` dans la fenetre principale :
 +----------------------------------------------------+--------------------+
 |                                                    |      Actions       |
 |                                                    |--------------------|
-|                  VuePlateau                        | Joueur : Joueur 1  |
+|                    VuePlateau                      | Joueur : Joueur 1  |
 |                                                    | Role : Porteuse    |
-|  +------+------+------+------+------+              | Actions : 4        |
-|  |      |      |      |      |      |              | Tempete : 2.0      |
-|  +------+------+------+------+------+              | Sable total : 8    |
-|  |      |      |      |      |      |              |--------------------|
-|  +------+------+------+------+------+              | [ Deplacer ]       |
-|  |      |      |[OEIL]|      |      |              | [ Creuser  ]       |
-|  +------+------+------+------+------+              | [ Explorer ]       |
-|  |      |      |      |      |      |              | [ Ramasser ]       |
-|  +------+------+------+------+------+              | [ Donner eau ]     |
-|  |      |      |      |      |      |              | [ Prendre eau ]    |
-|  +------+------+------+------+------+              | [ Utiliser eq ]    |
+|        +------+------+------+------+------+        | Actions : 4        |
+|        |      |      |      |      |      |        | Tempete : 2.0      |
+|        +------+------+------+------+------+        | Sable total : 8    |
+|        |      |      |      |      |      |        |--------------------|
+|        +------+------+------+------+------+        | [ Deplacer ]       |
+|        |      |      |[OEIL]|      |      |        | [ Creuser  ]       |
+|        +------+------+------+------+------+        | [ Explorer ]       |
+|        |      |      |      |      |      |        | [ Ramasser ]       |
+|        +------+------+------+------+------+        | [ Donner eau ]     |
+|        |      |      |      |      |      |        | [ Prendre eau ]    |
+|        +------+------+------+------+------+        | [ Utiliser eq ]    |
 |                                                    |--------------------|
 |                                                    | [ Fin de tour ]    |
 |                                                    | [ Retour menu ]    |
@@ -426,7 +426,7 @@ EAU.png (icone d'eau), FOND_MENU.png (fond du menu)
 
 ## Diagramme de classes
 
-Le diagramme de classes UML complet est dans `diagramme_classes.pdf`. On l'a genere a partir du fichier source `diagramme_classes.puml` (PlantUML).
+Le diagramme de classes UML complet est dans `diagramme_classes.pdf`.
 
 Le projet contient 18 classes/enums repartis en 3 packages :
 - **modele** : Desert, Zone, Joueur, TypeZone, CarteTempete, Equipement, Piece, Role
@@ -491,19 +491,8 @@ java -cp out:lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar org.junit.runner.JUn
 
 ---
 
-## Conventions de code
-
-| Convention           | Ce qu'on fait                                               |
-|----------------------|-------------------------------------------------------------|
-| Documentation        | Commentaires en `//` en francais                            |
-| En-tete fichier      | Bloc `==` avec FICHIER, Projet, Auteur                      |
-| Sections             | Separateurs `==` pour organiser le code                     |
-| Nommage              | camelCase pour les methodes, MAJUSCULES pour les constantes |
-| Architecture         | MVC strict avec Observable/Observer                         |
-
----
-
 ## Auteurs
 
 > **Aly KONATE** & **Youssef ABOU HASHISH**
+
 > Projet POGL — L2 Informatique, Universite Paris-Saclay
