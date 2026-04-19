@@ -144,7 +144,7 @@ On a organise le projet en 3 packages principaux qui suivent le pattern MVC :
 +-------------------------------+                          +----------------------------+
 |             VUE               |    ActionListener        |        CONTROLEUR          |
 |                               |    PlateauListener       |                            |
-|  Fenetre (JFrame+CardLayout)  | ---------------------->  |  Controleur.java           |
+|  Fenetre (JFrame+CardLayout)  |  --------------------->  |  Controleur.java           |
 |  VuePlateau (Graphics2D)      |                          |  (implements               |
 |  VueActions (8 boutons)       |                          |   ActionListener,          |
 |  VueJoueurs (infos joueurs)   |                          |   PlateauListener)         |
@@ -191,7 +191,7 @@ On utilise le pattern **Observable/Observer** pour que le modele et les vues res
      }
 
                      update(observable, arg)
-     Desert ---------------------------------> VueActions.update()  -> repaint()
+     Desert ---------------------------------> VueActions.update() -> repaint()
                                                VueJoueurs.update() -> repaint()
                                                VuePieces.update()  -> repaint()
                                                VuePlateau.update() -> repaint()
@@ -327,18 +327,18 @@ On a 3 ecrans geres par un `CardLayout` dans la fenetre principale :
 |                    Configuration de la partie                          |
 |------------------------------------------------------------------------|
 |                                                                        |
-|   Nombre de joueurs : [ 2 ]                                            |
+|                 Nombre de joueurs : [ 2 ]                              |
 |                                                                        |
-|   Joueur 1 : [ Nom _________ ]                                         |
-|   Joueur 2 : [ Nom _________ ]                                         |
+|                 Joueur 1 : [ Nom _________ ]                           |
+|                 Joueur 2 : [ Nom _________ ]                           |
 |                                                                        |
-|   Roles :                                                              |
-|     - Role J1 : [ Aleatoire v ]                                        |
-|     - Role J2 : [ Aleatoire v ]                                        |
+|                 Roles :                                                |
+|                 - Role J1 : [ Aleatoire v ]                            |
+|                 - Role J2 : [ Aleatoire v ]                            |
 |                                                                        |
-|   Difficulte : [ Normal v ]                                            |
+|                 Difficulte : [ Normal v ]                              |
 |                                                                        |
-|        [ Regles du jeu ]   [ Jouer ]   [ Demo ]                        |
+|                 [ Regles du jeu ]   [ Jouer ]   [ Demo ]               |
 |                             [ Quitter ]                                |
 +------------------------------------------------------------------------+
                                     | clic JOUER
@@ -371,22 +371,22 @@ On a 3 ecrans geres par un `CardLayout` dans la fenetre principale :
 |                                                    | [ ] Gouvernail     |
 |                                                    | [ ] Capteur        |
 +----------------------------------------------------+--------------------+
-                      | Fin de game
-                      v
-+----------------------------------------+
-|            Fin de partie               |
-|----------------------------------------|
-|                                        |
-|           VICTOIRE / DEFAITE           |
-|                                        |
-|       Message explicatif (raison)      |
-|                                        |
-|             [ Retour menu ]            |
-+----------------------------------------+
+                                      | Fin de game
+                                      v
+                  +----------------------------------------+        
+                  |            Fin de partie               |
+                  |----------------------------------------|
+                  |                                        |
+                  |           VICTOIRE / DEFAITE           |
+                  |                                        |
+                  |       Message explicatif (raison)      |
+                  |                                        |
+                  |             [ Retour menu ]            |
+                  +----------------------------------------+
 ```
 
-| Ecran   | Panneau           | Affiche                                      |
-|---------|-------------------|----------------------------------------------|
+| Ecran   | Panneau           | Affiche                                       |
+|---------|-------------------|-----------------------------------------------|
 | "MENU"  | VueMenu           | Formulaire de configuration de la partie      |
 | "JEU"   | Plateau + Panels  | Le jeu complet (plateau, actions, joueurs)    |
 | "FIN"   | VueFinDePartie    | Ecran de victoire ou de defaite               |
@@ -456,12 +456,6 @@ On a ecrit **138 tests unitaires** avec JUnit 4 qui couvrent toutes les classes 
 
 ## Installation et lancement
 
-### Prerequis
-
-```bash
-java -version      # Java 17 minimum
-```
-
 ### Compilation et lancement
 
 ```bash
@@ -488,11 +482,3 @@ java -cp out:lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar org.junit.runner.JUn
     modele.JoueurTest modele.ZoneTest modele.DesertTest modele.EquipementTest \
     modele.PieceTest modele.CarteTempeteTest modele.TypeZoneTest modele.RoleTest
 ```
-
----
-
-## Auteurs
-
-> **Aly KONATE** & **Youssef ABOU HASHISH**
-
-> Projet POGL — L2 Informatique, Universite Paris-Saclay
