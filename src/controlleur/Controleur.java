@@ -45,6 +45,9 @@ import vue.VueFinDePartie;
 import vue.PlateauListener;
 
 import javax.swing.*;
+
+import controlleur.Controleur.ModeAction;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -80,6 +83,8 @@ public class Controleur implements PlateauListener, ActionListener {
     private ModeAction modeActuel;
     // Joueur cible pour les actions qui necessitent de choisir un autre joueur (par exemple donner ou prendre de l'eau)
     private Joueur joueurCible;
+    // Equipement choisi en attente d'une zone cible
+    private Equipement equipementEnCours;
 
     // ==================================================================
     // Constructeur
@@ -94,8 +99,9 @@ public class Controleur implements PlateauListener, ActionListener {
         this.fenetre = fenetre;
         this.modeActuel = ModeAction.ATTENTE;
         this.joueurCible = null;
-        // On branche les ecouteurs sur les boutons d'actions
-        initialiserEcouteursBoutons();
+        this.equipementEnCours = null;
+        // On associe une action à chaque bouton
+        initialiserActionsBoutons();
         // On s'enregistre comme ecouteur des clics sur le plateau
         fenetre.getVuePlateau().setPlateauListener(this);
         // On enregistre les vues comme observateurs du modele pour qu'elles se mettent a jour automatiquement
@@ -107,7 +113,7 @@ public class Controleur implements PlateauListener, ActionListener {
     // ==================================================================
     // Branche les ActionListener sur tous les boutons de la vue d'actions
     // Chaque bouton a une actionCommand qui permet de savoir quel bouton a ete clique dans actionPerformed()
-    private void initialiserEcouteursBoutons() {
+    private void initialiserActionsBoutons() {
         VueActions vueActions = fenetre.getVueActions();
         // On recupere les boutons et on ajoute ce controleur comme ecouteur
         vueActions.getBoutonDeplacer().addActionListener(this);
@@ -365,10 +371,12 @@ public class Controleur implements PlateauListener, ActionListener {
     // Utilise un equipement qui necessite de cibler une zone sur le plateau
     // Par exemple, le jetpack permet de se deplacer n'importe ou
     private void effectuerUtilisationEquipementSurZone(int ligne, int colonne) {
-        // L'equipement en cours d'utilisation est stocke temporairement
-        // On demande au modele de l'appliquer sur la zone ciblee
+        if (equipementEnCours == null) {
+            modeActuel = ModeAction.ATTENTE;
+            return;
+        }
         Joueur joueurActif = modele.getJoueurActif();
-        boolean utilisationOk = modele.utiliserEquipementSurZone(joueurActif, ligne, colonne);
+        boolean utilisationOk = modele.utiliserEquipementSurZone(joueurActif, equipementEnCours, ligne, colonne);
         if (utilisationOk) {
             fenetre.getVuePlateau().effacerSurbrillance();
         } else {
@@ -376,6 +384,7 @@ public class Controleur implements PlateauListener, ActionListener {
                 "Impossible d'utiliser l'equipement sur cette zone !",
                 "Action invalide", JOptionPane.WARNING_MESSAGE);
         }
+        equipementEnCours = null;
         modeActuel = ModeAction.ATTENTE;
     }
 
@@ -528,6 +537,7 @@ public class Controleur implements PlateauListener, ActionListener {
         TypeEquipement type = equipementChoisi.getType();
         if (type == TypeEquipement.JETPACK || type == TypeEquipement.BLASTER) {
             // Ces equipements necessitent de cliquer sur une zone
+            equipementEnCours = equipementChoisi;
             modele.preparerEquipement(joueur, equipementChoisi);
             modeActuel = ModeAction.UTILISER_EQUIPEMENT;
             JOptionPane.showMessageDialog(fenetre,

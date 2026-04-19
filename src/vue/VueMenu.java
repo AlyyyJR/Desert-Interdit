@@ -324,7 +324,7 @@ public class VueMenu extends JPanel {
     }
 
     // ==================================================================
-    //                    OUVERTURE DES REGLES
+    // OUVERTURE DES REGLES
     // ==================================================================
     // Ouvre le fichier regles.pdf avec le lecteur PDF du systeme
     private void ouvrirRegles() {

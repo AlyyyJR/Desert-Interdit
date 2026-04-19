@@ -54,6 +54,8 @@ public class Joueur {
     private Role role;
     // Index du joueur dans la liste des joueurs
     private int index;
+    // Indique si le joueur est protege contre la prochaine vague de chaleur
+    private boolean bouclierSolaireActif;
 
     // ==================================================================
     // Constructeurs
@@ -67,6 +69,7 @@ public class Joueur {
         this.equipements = new ArrayList<>();
         this.role = null;
         this.index = -1;
+        this.bouclierSolaireActif = false;
         // La position sera definie quand le joueur est place sur le plateau
         this.ligne = -1;
         this.colonne = -1;
@@ -108,6 +111,18 @@ public class Joueur {
     // Retourne true si l'equipement a ete retire, false sinon.
     public boolean removeEquipement(Equipement equipement) {
         return equipements.remove(equipement);
+    }
+    // Active la protection contre la prochaine vague de chaleur
+    public void activerBouclierSolaire() {
+        bouclierSolaireActif = true;
+    }
+    // Retourne true si le bouclier solaire est actif
+    public boolean hasBouclierSolaireActif() {
+        return bouclierSolaireActif;
+    }
+    // Consomme la protection du bouclier solaire
+    public void consommerBouclierSolaire() {
+        bouclierSolaireActif = false;
     }
     // ==================================================================
     // Getters et Setters

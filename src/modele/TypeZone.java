@@ -79,7 +79,8 @@ public enum TypeZone {
         return this == INDICE_LIGNE_0 || this == INDICE_COLONNE_0
             || this == INDICE_LIGNE_1 || this == INDICE_COLONNE_1
             || this == INDICE_LIGNE_2 || this == INDICE_COLONNE_2
-            || this == INDICE_LIGNE_3 || this == INDICE_COLONNE_3;
+            || this == INDICE_LIGNE_3 || this == INDICE_COLONNE_3
+            ;
     }
     // Retourne l'index de la piece associee a cet indice (0 a 3)
     // 0 = moteur, 1 = helice, 2 = gouvernail, 3 = capteur solaire

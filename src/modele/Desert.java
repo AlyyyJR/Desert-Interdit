@@ -122,7 +122,7 @@ public class Desert extends Observable {
     private Random random;
 
     // ==================================================================
-    //                          CONSTRUCTEUR
+    //  CONSTRUCTEUR
     // ==================================================================
     // Constructeur du desert. Initialise la grille 5x5, place l'oeil de la
     // tempete au centre, distribue les zones speciales aleatoirement et
@@ -154,7 +154,7 @@ public class Desert extends Observable {
     }
 
     // ==================================================================
-    //                     INITIALISATION DU PLATEAU
+    // INITIALISATION DU PLATEAU
     // ==================================================================
     // Initialise la grille 5x5 avec les zones speciales placees aleatoirement.
     // L'oeil de la tempete est toujours au centre (2,2)
@@ -272,7 +272,7 @@ public class Desert extends Observable {
     }
 
     // ==================================================================
-    //                       GESTION DES JOUEURS
+    // GESTION DES JOUEURS
     // ==================================================================
     // Ajoute un joueur au jeu. Le joueur est place sur le site du crash
     // La couleur est attribuee automatiquement
@@ -315,7 +315,7 @@ public class Desert extends Observable {
     }
 
     // ==================================================================
-    //                       ACTIONS DES JOUEURS
+    // ACTIONS DES JOUEURS
     // ==================================================================
     // Deplace un joueur vers une case adjacente si le deplacement est valide
     // Coute 1 action
@@ -508,7 +508,7 @@ public class Desert extends Observable {
     }
 
     // ==================================================================
-    //                        FIN DE TOUR
+    // FIN DE TOUR
     // ==================================================================
     // Termine le tour du joueur actif et declenche les actions du desert (tempete). Puis passe au joueur suivant.
     public void finDeTour() {
@@ -560,7 +560,7 @@ public class Desert extends Observable {
     }
 
     // ==================================================================
-    //                     MECANIQUES DE LA TEMPETE
+    // MECANIQUES DE LA TEMPETE
     // ==================================================================
     // Fait souffler le vent dans une direction donnee avec une certaine force
     // L'oeil de la tempete se deplace, et les zones se decalent
@@ -642,6 +642,11 @@ public class Desert extends Observable {
             if (zone.getType() == TypeZone.TUNNEL && zone.isExploree()) {
                 continue;
             }
+            // Le bouclier solaire protege une seule fois contre la chaleur
+            if (joueur.hasBouclierSolaireActif()) {
+                joueur.consommerBouclierSolaire();
+                continue;
+            }
             joueur.boireEau();
         }
         verifierFinDePartie();
@@ -654,7 +659,7 @@ public class Desert extends Observable {
     }
 
     // ==================================================================
-    //                   VERIFICATION FIN DE PARTIE
+    // VERIFICATION FIN DE PARTIE
     // ==================================================================
     // Verifie les conditions de fin de partie
     // Defaite : joueur deshydrate, sable depasse SABLE_MAX, tempete >= 7
@@ -703,7 +708,7 @@ public class Desert extends Observable {
     }
 
     // ==================================================================
-    //                         UTILITAIRES
+    // UTILITAIRES
     // ==================================================================
     // Retourne la liste des zones adjacentes a une position donnee
     // (haut, bas, gauche, droite, en restant dans les limites)
@@ -749,7 +754,7 @@ public class Desert extends Observable {
     }
 
     // ==================================================================
-    //                      GETTERS ET SETTERS
+    // GETTERS ET SETTERS
     // ==================================================================
     // Retourne la grille de zones du plateau (5x5)
     public Zone[][] getGrille() {
@@ -848,7 +853,7 @@ public class Desert extends Observable {
     }
 
     // ==================================================================
-    //            METHODES AJOUTEES POUR LE CONTROLEUR
+    // METHODES AJOUTEES POUR LE CONTROLEUR
     // ==================================================================
     // Alias pour isPartieTerminee() - indique si la partie est finie
     public boolean isPartieFinie() {
@@ -984,7 +989,21 @@ public class Desert extends Observable {
         if (j.getEquipements().isEmpty()) return false;
         if (l < 0 || l >= TAILLE || c < 0 || c >= TAILLE) return false;
         Equipement equip = j.getEquipements().get(0);
-        return utiliserEquipement(j, equip);
+        return utiliserEquipementSurZone(j, equip, l, c);
+    }
+    // Utilise l'equipement choisi sur la zone ciblee
+    public boolean utiliserEquipementSurZone(Joueur j, Equipement e, int l, int c) {
+        if (partieTerminee) return false;
+        if (e == null || !j.getEquipements().contains(e)) return false;
+        if (l < 0 || l >= TAILLE || c < 0 || c >= TAILLE) return false;
+        switch (e.getType()) {
+            case JETPACK:
+                return utiliserJetpack(j, e, l, c);
+            case BLASTER:
+                return utiliserBlaster(j, e, l, c);
+            default:
+                return utiliserEquipement(j, e);
+        }
     }
     // Prepare un equipement pour utilisation (pas d'effet pour l'instant,
     // reserve pour une logique future)
@@ -1006,12 +1025,9 @@ public class Desert extends Observable {
                 sableTotal -= sableRetire;
                 break;
             case JETPACK:
-                // Le jetpack sera utilise via deplacerJoueur avec des coordonnees
-                // Le controleur gerera la destination
-                break;
+                return false;
             case BOUCLIER_SOLAIRE:
-                // Protection contre la prochaine vague de chaleur
-                // Le controleur gerera le bouclier
+                j.activerBouclierSolaire();
                 break;
             case DETECTEUR:
                 // Revele les zones dans un rayon de 3x3
@@ -1028,6 +1044,37 @@ public class Desert extends Observable {
                 }
                 break;
         }
+        j.removeEquipement(e);
+        notifierObservateurs();
+        return true;
+    }
+    // Deplace le joueur sur n'importe quelle zone valide sans depenser d'action
+    private boolean utiliserJetpack(Joueur j, Equipement e, int l, int c) {
+        Zone destination = grille[l][c];
+        if (destination.getType() == TypeZone.OEIL || destination.isBloquee()) {
+            return false;
+        }
+        grille[j.getLigne()][j.getColonne()].removeOccupant(j);
+        j.setLigne(l);
+        j.setColonne(c);
+        destination.addOccupant(j);
+        j.removeEquipement(e);
+        notifierObservateurs();
+        return true;
+    }
+    // Retire tout le sable de la case actuelle ou d'une case adjacente
+    private boolean utiliserBlaster(Joueur j, Equipement e, int l, int c) {
+        int distance = Math.abs(j.getLigne() - l) + Math.abs(j.getColonne() - c);
+        if (distance > 1) {
+            return false;
+        }
+        Zone cible = grille[l][c];
+        if (cible.getType() == TypeZone.OEIL || cible.getSable() == 0) {
+            return false;
+        }
+        int sableRetire = cible.getSable();
+        cible.setSable(0);
+        sableTotal -= sableRetire;
         j.removeEquipement(e);
         notifierObservateurs();
         return true;
@@ -1088,6 +1135,9 @@ public class Desert extends Observable {
             }
             joueurs.add(joueur);
         }
+        if (modeDemo) {
+            donnerEquipementsDemo();
+        }
         // Definir le premier joueur actif
         if (!joueurs.isEmpty()) {
             joueurActif = joueurs.get(0);
@@ -1095,13 +1145,21 @@ public class Desert extends Observable {
         }
         notifierObservateurs();
     }
+    // En mode demo, chaque joueur commence avec un exemplaire de chaque equipement
+    private void donnerEquipementsDemo() {
+        for (Joueur joueur : joueurs) {
+            for (TypeEquipement type : TypeEquipement.values()) {
+                joueur.addEquipement(new Equipement(type));
+            }
+        }
+    }
     // Alias pour getPiecesRamassees() - retourne le tableau des pieces recuperees
     public boolean[] getPiecesRecuperees() {
         return piecesRamassees;
     }
 
     // ==================================================================
-    //                   REPRESENTATION TEXTUELLE
+    // REPRESENTATION TEXTUELLE
     // ==================================================================
     // Retourne une representation textuelle du plateau de jeu
     // Affiche la grille avec les types de zones, le sable et les joueurs

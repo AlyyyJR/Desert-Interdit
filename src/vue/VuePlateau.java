@@ -258,6 +258,12 @@ public class VuePlateau extends JPanel implements Observer {
         } catch (Exception e) {
             // methode peut ne pas exister, on laisse false
         }
+        boolean visible = false;
+        try {
+            visible = zone.isVisible();
+        } catch (Exception e) {
+            // methode peut ne pas exister, on laisse false
+        }
         TypeZone typeZone = null;
         try {
             typeZone = zone.getType();
@@ -278,8 +284,8 @@ public class VuePlateau extends JPanel implements Observer {
             }
             return;
         }
-        // Zone non exploree
-        if (!exploree) {
+        // Zone non connue
+        if (!exploree && !visible) {
             Image imgDos = getImage("DOS_CARTE");
             if (imgDos != null) {
                 g2d.drawImage(imgDos, x, y, TAILLE_TUILE, TAILLE_TUILE, this);
@@ -294,7 +300,7 @@ public class VuePlateau extends JPanel implements Observer {
             }
             return;
         }
-        // Zone exploree - determiner la couleur/image de fond
+        // Zone exploree ou visible - determiner la couleur/image de fond
         if (typeZone != null) {
             switch (typeZone) {
                 case OASIS:
@@ -330,7 +336,13 @@ public class VuePlateau extends JPanel implements Observer {
         } catch (Exception e) {
             return;
         }
-        if (!exploree) return;
+        boolean visible = false;
+        try {
+            visible = zone.isVisible();
+        } catch (Exception e) {
+            return;
+        }
+        if (!exploree && !visible) return;
         TypeZone typeZone = null;
         try {
             typeZone = zone.getType();
